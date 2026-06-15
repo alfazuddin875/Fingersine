@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-    # রানার পরিবর্তন করে windows-latest করা হলো
     runs-on: windows-latest
 
     steps:
@@ -20,21 +19,19 @@ jobs:
         distribution: 'temurin'
 
     - name: Create Missing Environment Files
-      # উইন্ডোজ কমান্ড প্রম্পট অনুযায়ী ফাইল তৈরি করা হচ্ছে
       run: |
         echo API_KEY=dummy_value > .env.example
         echo API_KEY=dummy_value > .env
 
     - name: Generate Gradle Wrapper (If Missing)
-      # উইন্ডোজে gradlew.bat জেনারেট করা হচ্ছে
+      # এখানে 'not' পরিবর্তন করে '!' দেওয়া হয়েছে যা পাওয়ারশেলে সঠিকভাবে কাজ করবে
       run: |
-        if (not (Test-Path "gradlew.bat")) {
+        if (!(Test-Path "gradlew.bat")) {
             gradle wrapper --gradle-version 8.2
         }
       shell: pwsh
 
     - name: Build Debug APK
-      # উইন্ডোজে সরাসরি gradlew.bat রান করা হচ্ছে
       run: .\gradlew.bat assembleDebug
       
     - name: Upload Finished APK
