@@ -19,8 +19,15 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Create Missing Environment Files
+      # বিল্ড সফল করতে এখানে ডামি .env এবং .env.example ফাইল তৈরি করা হচ্ছে
+      run: |
+        touch .env.example
+        touch .env
+        echo "API_KEY=dummy_value" > .env.example
+        echo "API_KEY=dummy_value" > .env
+
     - name: Generate Gradle Wrapper (If Missing)
-      # প্রজেক্টে gradlew ফাইল না থাকলে এটি স্বয়ংক্রিয়ভাবে তা তৈরি করে নেবে
       run: |
         if [ ! -f "gradlew" ]; then
           gradle wrapper --gradle-version 8.2
