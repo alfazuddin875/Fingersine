@@ -1,0 +1,6 @@
+{
+  "name": "Gesture Detector",
+  "description": "A high-performance AI hand gesture detection app using Jetpack Compose and Google MediaPipe Tasks Vision.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
