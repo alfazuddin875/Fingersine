@@ -6,7 +6,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # রানার পরিবর্তন করে windows-latest করা হলো
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Code
@@ -18,30 +19,23 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Configure Gradle Memory and Cache
-      # জাভার মেমোরি ও ক্যাশ এরর দূর করার জন্য এই কনফিগারেশন যোগ করা হয়েছে
-      run: |
-        mkdir -p ~/.gradle
-        echo "org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m" >> ~/.gradle/gradle.properties
-        echo "org.gradle.configuration-cache=false" >> ~/.gradle/gradle.properties
-
     - name: Create Missing Environment Files
+      # উইন্ডোজ কমান্ড প্রম্পট অনুযায়ী ফাইল তৈরি করা হচ্ছে
       run: |
-        touch .env.example
-        touch .env
-        echo "API_KEY=dummy_value" > .env.example
-        echo "API_KEY=dummy_value" > .env
+        echo API_KEY=dummy_value > .env.example
+        echo API_KEY=dummy_value > .env
 
     - name: Generate Gradle Wrapper (If Missing)
+      # উইন্ডোজে gradlew.bat জেনারেট করা হচ্ছে
       run: |
-        if [ ! -f "gradlew" ]; then
-          gradle wrapper --gradle-version 8.2
-        fi
-        chmod +x gradlew
+        if (not (Test-Path "gradlew.bat")) {
+            gradle wrapper --gradle-version 8.2
+        }
+      shell: pwsh
 
-    - name: Build Debug APK with Daemon Disabled
-      # --no-daemon দিলে মেমোরি শেয়ারিং এররগুলো আর আসে না
-      run: ./gradlew assembleDebug --no-daemon
+    - name: Build Debug APK
+      # উইন্ডোজে সরাসরি gradlew.bat রান করা হচ্ছে
+      run: .\gradlew.bat assembleDebug
       
     - name: Upload Finished APK
       uses: actions/upload-artifact@v4
